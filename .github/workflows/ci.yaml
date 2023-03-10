@@ -231,7 +231,7 @@ jobs:
 
   notify:
     runs-on: ubuntu-latest
-    if: failure() && ${{ github.event_name }} == 'push'
+    if: github.event_name == 'push' && failure()
     needs:
       - lint
       - deny
@@ -245,14 +245,18 @@ jobs:
       - name: Notify Discord on failure
         uses: sarisia/actions-status-discord@v1
         with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
           username: "Github Actions"
           status: Failure
+          color: 0xff0000
           nodetail: true
-          title: "Workflow: ${{ github.workflow }}"
-          url: ${{ github.repository_url }}/actions/runs/${{ github.run_id }}
-          description: |
-            [@${{ github.pusher }}](${{ github.url }}/${{ github.pusher }}]
-            was the last one to touch ${{ github.repository }}, is all I'm
-            saying...
+          # yamllint disable rule:line-length
+          title: "${{ github.repository }} ${{ github.workflow }} has failed on ${{ github.event_name }} to ${{ github.ref_name }}"
+          url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          description: >
+            [`@${{ github.actor }}`](${{ github.server_url }}/${{ github.actor }})
+            was the last one to touch
+            [that repository](${{ github.server_url }}/${{ github.repository }}),
+            is all I'm saying.
           avatar_url: "https://media0.giphy.com/media/oe33xf3B50fsc/200.gif"
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          # yamllint enable rule:line-length
