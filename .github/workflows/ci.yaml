@@ -193,7 +193,7 @@ jobs:
         with:
           toolchain: ${{ matrix.rust }}
       - uses: r7kamura/rust-problem-matchers@v1
-      - run: cargo +${{ matrix.rust }} test --release
+      - run: cargo +${{ matrix.rust }} test --release --all-features
 
   doc:
     runs-on: ubuntu-22.04
