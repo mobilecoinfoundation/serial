@@ -1,0 +1,19 @@
+# These lines impact repository security
+/.github/CODEOWNERS         @jcape @cbeck88
+/.github/settings.yml       @jcape @cbeck88
+
+# These lines prevent reviews of trivial changes blocking on particular users
+/.gitattributes
+/.gitconfig
+/.gitignore
+/.markdownlint-cli2.jsonrc
+/CHANGELOG.md
+/Cargo.toml
+/Cargo.lock
+/LICENSE
+/README.md
+/deny.toml
+/rust-toolchain.toml
+/rustfmt.toml
+
+/src                        @jcape @cbeck88

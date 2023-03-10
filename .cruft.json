@@ -1,0 +1,30 @@
+{
+  "template": "/home/james/src/mobilecoinfoundation/cookiecutters",
+  "commit": "cf7d821d0fe9ff31b68bdac1d70ec83486a722a8",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "_copy_without_render": [
+        ".github/workflows/*"
+      ],
+      "repo_name": "serial",
+      "github_username": "@jcape",
+      "owners": "@jcape",
+      "type": "single-crate",
+      "license": "Apache-2.0",
+      "arch": "any",
+      "workspace_description": "Serialization wrappers",
+      "workspace_readme_title": "MobileCoin: Serialization Wrappers",
+      "crate_name": "mc-serial",
+      "crate_namespace_prefix": "mc-",
+      "crate_description": "Basic wrappers for serialization",
+      "crate_readme_title": "MobileCoin: Serialization Wrappers",
+      "crate_sub_dir": "serial",
+      "version": "0.1.0",
+      "crate_keywords": "serialization utility",
+      "crate_categories": "no-std",
+      "_template": "/home/james/src/mobilecoinfoundation/cookiecutters"
+    }
+  },
+  "directory": "rust/repo"
+}

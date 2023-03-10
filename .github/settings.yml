@@ -1,0 +1,93 @@
+---
+repository:
+  name: serial
+  description: MobileCoin Serialization Helpers
+  homepage: https://mobilecoin.foundation/
+  topics: serialization
+  private: false
+  has_issues: true
+  has_projects: false
+  has_wiki: true
+  has_downloads: true
+  default_branch: main
+  allow_squash_merge: true
+  allow_merge_commit: false
+  allow_rebase_merge: false
+  allow_auto_merge: true
+  delete_branch_on_merge: true
+  use_squash_pr_title_as_default: true
+  enable_automated_security_fixes: true
+  enable_vulnerability_alerts: true
+
+labels:
+  - name: github_actions
+    color: '#000000'
+    description: Changes to github actions or dependencies
+  - name: rust
+    color: '#f74c00'
+    description: Changes to rust code or dependencies
+  - name: python
+    color: '#4584b6'
+    description: Changes to python code or dependencies
+  - name: go
+    color: '#29beb0'
+    description: Changes to golang code or dependencies
+
+  - name: size/XS
+    color: '#00ed01'
+    description: Extra-Small PRs
+  - name: size/S
+    color: '#3af901'
+    description: Small PRs
+  - name: size/M
+    color: '#cefb02'
+    description: Medium-sized PRs
+  - name: size/L
+    color: '#ffde40'
+    description: Large PRs
+  - name: size/XL
+    color: '#ff9100'
+    description: Extra-Large PRs
+  - name: size/XXL
+    color: '#f24d11'
+    description: Double-wide PRs
+  - name: size/OHLAWDHECOMIN
+    color: '#ed1717'
+    description: PRs that should get broken down
+
+collaborators:
+  - username: meowblecoinbot
+    permission: triage
+  - username: cbeck88
+    permission: maintain
+  - username: jcape
+    permission: maintain
+
+teams:
+  - name: coredev
+    permission: push
+
+branches:
+  - name: main
+    # https://docs.github.com/en/rest/branches/branch-protection?apiVersion=2022-11-28
+    protection:
+      required_pull_request_reviews:
+        required_approving_review_count: 1
+        dismiss_stale_reviews: false
+        require_code_owner_reviews: true
+        require_last_push_approval: true
+      required_conversation_resolution: true
+      required_status_checks:
+        strict: false
+        contexts:
+          - lint
+          - "deny (bans licenses sources)"
+          - sort
+          - "clippy (stable)"
+          - "build (stable)"
+          - "test (stable)"
+          - "doc (stable)"
+          - coverage
+      enforce_admins: true
+      required_linear_history: true
+      restrictions: null
