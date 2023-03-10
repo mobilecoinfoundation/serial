@@ -234,12 +234,12 @@ jobs:
     if: failure() && ${{ github.event_name }} == 'push'
     needs:
       - lint
-      - "deny (bans licenses sources)"
+      - deny
       - sort
-      - "clippy (stable)"
-      - "build (stable)"
-      - "test (stable)"
-      - "doc (stable)"
+      - clippy
+      - build
+      - test
+      - doc
       - coverage
     steps:
       - name: Notify Discord on failure
