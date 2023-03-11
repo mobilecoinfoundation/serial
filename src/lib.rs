@@ -17,7 +17,10 @@ pub use prost::{self, DecodeError, EncodeError, Message};
 /// Decoding-specific types, here for backwards compatibility.
 pub mod decode {
     use super::*;
-    use alloc::{format, string::String};
+    use alloc::{
+        format,
+        string::{String, ToString},
+    };
     use ciborium::de::Error as CiboriumError;
     use core::fmt::Debug;
 
@@ -39,7 +42,7 @@ pub mod decode {
                 CiboriumError::Semantic(offset, inner_msg) => {
                     format!("Semantic Error at byte {offset:#?}: {inner_msg:#?}")
                 }
-                CiboriumError::RecursionLimitExceeded => format!("Recursion limit exceeded"),
+                CiboriumError::RecursionLimitExceeded => "Recursion limit exceeded".to_string(),
             };
 
             Self(err_msg)
