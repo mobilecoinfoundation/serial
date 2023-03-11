@@ -98,13 +98,13 @@ pub fn decode<T: Message + Default>(buf: &[u8]) -> Result<T, DecodeError> {
     T::decode(buf)
 }
 
-#[cfg(feature = "serde_with")]
+#[cfg(feature = "jsonu64")]
 /// This module contains a JsonU64 type which is used to represent u64 values safely in JSON.
 mod json_u64;
 
 /// JsonU64 is exported if it is available -- the serde_with crate which it
 /// depends on relies on std, so it must be optional.
-#[cfg(feature = "serde_with")]
+#[cfg(feature = "jsonu64")]
 pub use json_u64::JsonU64;
 
 /// Take a prost type and try to roundtrip it through a protobuf type

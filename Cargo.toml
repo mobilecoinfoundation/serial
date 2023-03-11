@@ -32,9 +32,9 @@ pre-release-replacements = [
 ]
 
 [features]
-std = ["serde/std", "ciborium/std", "jsonu64"]
+std = ["serde/std", "ciborium/std"]
 test_utils = ["dep:protobuf"]
-jsonu64 = ["dep:serde_with"]
+jsonu64 = ["std", "dep:serde_with"]
 
 [dependencies]
 prost = { version = "0.11", default-features = false, features = [
