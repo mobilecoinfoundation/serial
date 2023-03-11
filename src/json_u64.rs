@@ -44,6 +44,7 @@ impl AsRef<u64> for JsonU64 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use alloc::vec::Vec;
     use serde::{Deserialize, Serialize};
 
     #[derive(PartialEq, Serialize, Deserialize, Debug)]
@@ -55,7 +56,10 @@ mod tests {
     #[test]
     fn serialize_jsonu64_struct() {
         let the_struct = TestStruct {
-            nums: [0, 1, 2, u64::MAX].iter().map(Into::into).collect(),
+            nums: [0, 1, 2, u64::MAX]
+                .iter()
+                .map(Into::<JsonU64>::into)
+                .collect(),
             block: JsonU64(u64::MAX - 1),
         };
         let serialized = crate::serialize(&the_struct).unwrap();
