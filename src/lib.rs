@@ -76,7 +76,7 @@ where
     // NOTE: this depends on the precise behavior of ciborium-io 0.2:
     //       https://docs.rs/ciborium-io/0.2.0/src/ciborium_io/lib.rs.html#151
     ciborium::ser::into_writer(value, &mut writer)
-        .expect("into_writer with a Vec should be invallible");
+        .expect("into_writer with a Vec should be infallible");
 
     Ok(writer)
 }
