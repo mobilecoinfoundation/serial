@@ -9,7 +9,10 @@
 extern crate alloc;
 
 use alloc::vec::Vec;
-use core::fmt::{Display, Formatter, Result as FmtResult};
+use core::{
+    fmt::{Display, Formatter, Result as FmtResult},
+    mem,
+};
 use serde::{Deserialize, Serialize};
 
 pub use prost::{self, DecodeError, EncodeError, Message};
@@ -72,7 +75,7 @@ pub fn serialize<T: ?Sized>(value: &T) -> Result<Vec<u8>, encode::Error>
 where
     T: Serialize + Sized,
 {
-    let mut writer = Vec::new();
+    let mut writer = Vec::with_capacity(2 * mem::size_of::<T>());
     // NOTE: this depends on the precise behavior of ciborium-io 0.2:
     //       https://docs.rs/ciborium-io/0.2.0/src/ciborium_io/lib.rs.html#151
     ciborium::ser::into_writer(value, &mut writer)
@@ -145,15 +148,15 @@ mod test {
         assert_eq!(&deserialized, THE_STRING);
     }
 
-    #[derive(PartialEq, Serialize, Deserialize, Debug)]
-    struct TestStruct {
-        vec: Vec<u8>,
-        integer: u64,
-        float: f64,
-    }
-
     #[test]
     fn serialize_struct() {
+        #[derive(PartialEq, Serialize, Deserialize, Debug)]
+        struct TestStruct {
+            vec: Vec<u8>,
+            integer: u64,
+            float: f64,
+        }
+
         let the_struct = TestStruct {
             vec: vec![233, 123, 0, 12],
             integer: 4_242_424_242,
@@ -162,5 +165,40 @@ mod test {
         let serialized = serialize(&the_struct).unwrap();
         let deserialized = deserialize::<TestStruct>(&serialized).unwrap();
         assert_eq!(deserialized, the_struct);
+    }
+
+    #[test]
+    fn serialize_array() {
+        let bytes = [0x55u8; 32];
+
+        let serialized = serialize(&bytes).expect("Could not serialize byte array.");
+        let deserialized =
+            deserialize::<[u8; 32]>(&serialized).expect("Could not deserialize byte array.");
+
+        assert_eq!(deserialized, bytes);
+    }
+
+    #[test]
+    fn serialize_array_in_struct() {
+        #[derive(Debug, Default, Deserialize, Serialize, PartialEq)]
+        struct ByteStruct {
+            bytes: [u8; 32],
+        }
+
+        let value = ByteStruct::default();
+        let serialized = serialize(&value).expect("Could not serialize byte struct.");
+        let deserialized =
+            deserialize::<ByteStruct>(&serialized).expect("Could not deserialize byte struct.");
+
+        assert_eq!(deserialized, value);
+
+        let value = ByteStruct {
+            bytes: [0x55u8; 32],
+        };
+        let serialized = serialize(&value).expect("Could not serialize byte struct.");
+        let deserialized =
+            deserialize::<ByteStruct>(&serialized).expect("Could not deserialize byte struct.");
+
+        assert_eq!(deserialized, value);
     }
 }
