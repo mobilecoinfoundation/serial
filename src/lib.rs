@@ -139,6 +139,14 @@ mod test {
     use alloc::{string::String, vec};
     use serde::{Deserialize, Serialize};
 
+    // A structure to test serialization and deserialization
+    #[derive(PartialEq, Serialize, Deserialize, Debug)]
+    struct TestStruct {
+        vec: Vec<u8>,
+        integer: u64,
+        float: f64,
+    }
+
     #[test]
     fn serialize_string() {
         const THE_STRING: &str = "There goes the baker with his tray, like always";
@@ -150,13 +158,6 @@ mod test {
 
     #[test]
     fn serialize_struct() {
-        #[derive(PartialEq, Serialize, Deserialize, Debug)]
-        struct TestStruct {
-            vec: Vec<u8>,
-            integer: u64,
-            float: f64,
-        }
-
         let the_struct = TestStruct {
             vec: vec![233, 123, 0, 12],
             integer: 4_242_424_242,
@@ -178,27 +179,93 @@ mod test {
         assert_eq!(deserialized, bytes);
     }
 
-    #[test]
-    fn serialize_array_in_struct() {
-        #[derive(Debug, Default, Deserialize, Serialize, PartialEq)]
-        struct ByteStruct {
-            bytes: [u8; 32],
-        }
+    /// Single, named byte array in a struct
+    #[derive(Debug, Default, Deserialize, Serialize, PartialEq)]
+    struct ByteStruct {
+        bytes: [u8; 32],
+    }
 
-        let value = ByteStruct::default();
-        let serialized = serialize(&value).expect("Could not serialize byte struct.");
-        let deserialized =
+    #[test]
+    fn struct_with_array() {
+        let expected = ByteStruct::default();
+        let serialized = serialize(&expected).expect("Could not serialize byte struct.");
+        let actual =
             deserialize::<ByteStruct>(&serialized).expect("Could not deserialize byte struct.");
 
-        assert_eq!(deserialized, value);
+        assert_eq!(actual, expected);
 
-        let value = ByteStruct {
+        let expected = ByteStruct {
             bytes: [0x55u8; 32],
         };
-        let serialized = serialize(&value).expect("Could not serialize byte struct.");
-        let deserialized =
+        let serialized = serialize(&expected).expect("Could not serialize byte struct.");
+        let actual =
             deserialize::<ByteStruct>(&serialized).expect("Could not deserialize byte struct.");
 
-        assert_eq!(deserialized, value);
+        assert_eq!(actual, expected);
+    }
+
+    /// Unnamed byte array in structs
+    #[derive(Debug, Default, Deserialize, Serialize, PartialEq)]
+    struct NewtypeBytes([u8; 32]);
+
+    #[test]
+    fn newtype_bytes() {
+        let expected = NewtypeBytes([0x55u8; 32]);
+        let serialized = serialize(&expected).expect("Could not serialize transparent struct.");
+        let actual =
+            deserialize::<NewtypeBytes>(&serialized).expect("Could not deserialize byte struct.");
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn newtype_bytes_vs_just_bytes() {
+        let expected = NewtypeBytes([0x55u8; 32]);
+        let serialized = serialize(&expected).expect("Could not serialize transparent struct.");
+
+        let bytes = [0x55u8; 32];
+        let bytes_serialized = serialize(&bytes).expect("Could not serialize byte array.");
+        assert_eq!(serialized, bytes_serialized);
+
+        let actual = deserialize::<NewtypeBytes>(&bytes_serialized)
+            .expect("Could not deserialize byte array to struct.");
+
+        assert_eq!(expected, actual);
+    }
+
+    /// Tuple struct with unnamed byte arrays
+    #[derive(Debug, Default, Deserialize, Serialize, PartialEq)]
+    struct TupleStruct([u8; 32], [u8; 32]);
+
+    #[test]
+    fn tuplestruct() {
+        let expected = TupleStruct([0x55u8; 32], [0xffu8; 32]);
+        let serialized = serialize(&expected).expect("Could not serialize transparent struct.");
+        let actual =
+            deserialize::<TupleStruct>(&serialized).expect("Could not deserialize byte struct.");
+        assert_eq!(expected, actual);
+    }
+
+    #[derive(Debug, Default, Deserialize, Serialize, PartialEq)]
+    struct InnerStruct {
+        bytes: [u8; 32],
+    }
+
+    #[derive(Debug, Default, Deserialize, Serialize, PartialEq)]
+    struct OuterStruct {
+        inner: InnerStruct,
+    }
+
+    #[test]
+    fn nested_struct() {
+        let expected = OuterStruct {
+            inner: InnerStruct {
+                bytes: [0x55u8; 32],
+            },
+        };
+        let serialized = serialize(&expected).expect("Could not serialize transparent struct.");
+        let actual =
+            deserialize::<OuterStruct>(&serialized).expect("Could not deserialize byte struct.");
+
+        assert_eq!(expected, actual);
     }
 }

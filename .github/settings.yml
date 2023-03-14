@@ -22,16 +22,20 @@ repository:
 labels:
   - name: github_actions
     color: '#000000'
-    description: Changes to github actions or dependencies
+    description: Pull requests that update github actions or dependencies
   - name: rust
     color: '#f74c00'
-    description: Changes to rust code or dependencies
+    description: Pull requests that update rust code or dependencies
   - name: python
     color: '#4584b6'
-    description: Changes to python code or dependencies
+    description: Pull requests that update python code or dependencies
   - name: go
     color: '#29beb0'
-    description: Changes to golang code or dependencies
+    description: Pull requests that update golang code or dependencies
+
+  - name: dependencies
+    color: '#0366d6'
+    description: Pull requests that update a dependency file 
 
   - name: size/XS
     color: '#00ed01'
