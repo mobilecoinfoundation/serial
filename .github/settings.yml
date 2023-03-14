@@ -35,7 +35,7 @@ labels:
 
   - name: dependencies
     color: '#0366d6'
-    description: Pull requests that update a dependency file 
+    description: Pull requests that update a dependency file
 
   - name: size/XS
     color: '#00ed01'
