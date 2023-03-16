@@ -16,7 +16,7 @@ rust-version = "1.67.1"
 [profile.release]
 lto = "thin"
 
-[metadata.release]
+[package.metadata.release]
 shared-version = true
 dev-version-ext = "beta.0"
 consolidate-commits = true
@@ -32,10 +32,24 @@ pre-release-replacements = [
 ]
 
 [features]
-std = ["serde/std", "serde_cbor/std", "serde_with"]
-test_utils = ["protobuf"]
+std = ["serde/std", "ciborium/std"]
+test_utils = ["dep:protobuf"]
+jsonu64 = ["std", "dep:serde_with"]
 
 [dependencies]
+# These dependencies locked because the interaction between cibiorum and ciborium-io is garbage.
+# 
+# cibiorum::ser::into_writer(&Vec<u8>) is infallible, but only because of how cibiorum-io is
+# implemented, in version 0.2.0, when the alloc feature (which is not exposed by ciborium) is
+# enabled.
+#
+# If you are considering using serde for any reason, consider the choices you have made in your
+# life, and then use protobufs (via prost) instead.
+ciborium = { version = "=0.2.0", default-features = false }
+ciborium-io = { version = "=0.2.0", default-features = false, features = [
+    "alloc",
+] }
+
 prost = { version = "0.11", default-features = false, features = [
     "prost-derive",
 ] }
@@ -43,9 +57,6 @@ protobuf = { version = "2.27", optional = true }
 serde = { version = "1.0", default-features = false, features = [
     "alloc",
     "derive",
-] }
-serde_cbor = { version = "0.11", default-features = false, features = [
-    "alloc",
 ] }
 serde_with = { version = "2.0", default-features = false, features = [
     "macros",
