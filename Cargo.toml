@@ -53,7 +53,7 @@ ciborium-io = { version = "=0.2.0", default-features = false, features = [
 prost = { version = "0.11", default-features = false, features = [
     "prost-derive",
 ] }
-protobuf = { version = "2.27", optional = true }
+protobuf = { version = "3.2", optional = true }
 serde = { version = "1.0", default-features = false, features = [
     "alloc",
     "derive",
