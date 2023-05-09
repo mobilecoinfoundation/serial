@@ -45,7 +45,7 @@ jsonu64 = ["std", "dep:serde_with"]
 #
 # If you are considering using serde for any reason, consider the choices you have made in your
 # life, and then use protobufs (via prost) instead.
-ciborium = { version = "=0.2.0", default-features = false }
+ciborium = { version = "=0.2.1", default-features = false }
 ciborium-io = { version = "=0.2.0", default-features = false, features = [
     "alloc",
 ] }
